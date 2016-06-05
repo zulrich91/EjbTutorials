@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.j2ee.ejbjarproject</type>
+    <configuration>
+        <buildExtensions xmlns="http://www.netbeans.org/ns/ant-build-extender/1">
+            <extension file="jaxws-build.xml" id="jaxws"/>
+        </buildExtensions>
+        <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
+            <name>EjbModule</name>
+            <minimum-ant-version>1.6.5</minimum-ant-version>
+            <included-library dirs="200">file.reference.jpa-api-2.0-cr-1.jar</included-library>
+            <included-library dirs="200">file.reference.hibernate-core.jar</included-library>
+            <included-library dirs="200">libs.PostgreSQLDriver.classpath</included-library>
+            <included-library dirs="200">file.reference.activation.jar</included-library>
+            <included-library dirs="200">file.reference.jaxb-api.jar</included-library>
+            <included-library dirs="200">file.reference.jbossws-native-jaxrpc.jar</included-library>
+            <included-library dirs="200">file.reference.jbossws-native-jaxws-ext.jar</included-library>
+            <included-library dirs="200">file.reference.jbossws-native-jaxws.jar</included-library>
+            <included-library dirs="200">file.reference.jbossws-native-saaj.jar</included-library>
+            <included-library dirs="200">file.reference.resolver.jar</included-library>
+            <included-library dirs="200">file.reference.serializer.jar</included-library>
+            <included-library dirs="200">file.reference.stax-api.jar</included-library>
+            <included-library dirs="200">file.reference.xalan.jar</included-library>
+            <included-library dirs="200">file.reference.xercesImpl.jar</included-library>
+            <source-roots>
+                <root id="src.dir"/>
+            </source-roots>
+            <test-roots>
+                <root id="test.src.dir"/>
+            </test-roots>
+        </data>
+    </configuration>
+</project>
