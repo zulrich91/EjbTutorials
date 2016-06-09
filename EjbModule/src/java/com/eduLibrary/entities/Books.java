@@ -98,7 +98,7 @@ public class Books implements Serializable {
     @PrePersist
     public void prePersist() {
         System.out.println("BookCallbackListener.prePersist:"
-                + "Book created  " + id );
+                + "Book creation in progress: Id is  " + id );
     }
 
     
@@ -106,6 +106,6 @@ public class Books implements Serializable {
     @PostPersist
     public void postPersist() {
         System.out.println("BookCallbackListener.postPersist::"
-                + "Book createdwith book id " + id );
+                + "Book created with book id " + id );
     }
 }

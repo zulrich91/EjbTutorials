@@ -8,9 +8,10 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>EjbModule</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <included-library dirs="200">file.reference.jpa-api-2.0-cr-1.jar</included-library>
-            <included-library dirs="200">file.reference.hibernate-core.jar</included-library>
             <included-library dirs="200">libs.PostgreSQLDriver.classpath</included-library>
+            <included-library dirs="200">file.reference.hibernate-core.jar</included-library>
+            <included-library dirs="200">file.reference.jpa-api-2.0-cr-1.jar</included-library>
+            <included-library dirs="200">file.reference.postgresql-9.3-1104.jdbc41.jar</included-library>
             <included-library dirs="200">file.reference.activation.jar</included-library>
             <included-library dirs="200">file.reference.jaxb-api.jar</included-library>
             <included-library dirs="200">file.reference.jbossws-native-jaxrpc.jar</included-library>
@@ -29,5 +30,8 @@
                 <root id="test.src.dir"/>
             </test-roots>
         </data>
+        <libraries xmlns="http://www.netbeans.org/ns/ant-project-libraries/1">
+            <definitions>./lib/nblibraries.properties</definitions>
+        </libraries>
     </configuration>
 </project>

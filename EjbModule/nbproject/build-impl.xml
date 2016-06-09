@@ -36,20 +36,45 @@ is divided into following sections:
     <target depends="-pre-init" name="-init-private">
         <property file="nbproject/private/private.properties"/>
     </target>
-    <target depends="-pre-init,-init-private" name="-init-userdir">
+    <target name="-pre-init-libraries">
+        <property location="./lib/nblibraries.properties" name="libraries.path"/>
+        <dirname file="${libraries.path}" property="libraries.dir.nativedirsep"/>
+        <pathconvert dirsep="/" property="libraries.dir">
+            <path path="${libraries.dir.nativedirsep}"/>
+        </pathconvert>
+        <basename file="${libraries.path}" property="libraries.basename" suffix=".properties"/>
+        <available file="${libraries.dir}/${libraries.basename}-private.properties" property="private.properties.available"/>
+    </target>
+    <target depends="-pre-init-libraries" if="private.properties.available" name="-init-private-libraries">
+        <loadproperties encoding="ISO-8859-1" srcfile="${libraries.dir}/${libraries.basename}-private.properties">
+            <filterchain>
+                <replacestring from="$${base}" to="${libraries.dir}"/>
+                <escapeunicode/>
+            </filterchain>
+        </loadproperties>
+    </target>
+    <target depends="-pre-init,-init-private,-init-private-libraries" name="-init-libraries">
+        <loadproperties encoding="ISO-8859-1" srcfile="${libraries.path}">
+            <filterchain>
+                <replacestring from="$${base}" to="${libraries.dir}"/>
+                <escapeunicode/>
+            </filterchain>
+        </loadproperties>
+    </target>
+    <target depends="-pre-init,-init-private,-init-libraries" name="-init-userdir">
         <property location="${netbeans.user}/build.properties" name="user.properties.file"/>
     </target>
-    <target depends="-pre-init,-init-private,-init-userdir" name="-init-user">
+    <target depends="-pre-init,-init-private,-init-libraries,-init-userdir" name="-init-user">
         <property file="${user.properties.file}"/>
         <!-- The two properties below are usually overridden -->
         <!-- by the active platform. Just a fallback. -->
         <property name="default.javac.source" value="1.4"/>
         <property name="default.javac.target" value="1.4"/>
     </target>
-    <target depends="-pre-init,-init-private,-init-userdir,-init-user" name="-init-project">
+    <target depends="-pre-init,-init-private,-init-libraries,-init-userdir,-init-user" name="-init-project">
         <property file="nbproject/project.properties"/>
     </target>
-    <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-init-macrodef-property" name="-do-init">
+    <target depends="-pre-init,-init-private,-init-libraries,-init-userdir,-init-user,-init-project,-init-macrodef-property" name="-do-init">
         <!-- Ensure configuration directory exists. -->
         <mkdir dir="${meta.inf}"/>
         <property name="runmain.jvmargs" value=""/>
@@ -173,7 +198,7 @@ is divided into following sections:
         <!-- Empty placeholder for easier customization. -->
         <!-- You can override this target in the ../build.xml file. -->
     </target>
-    <target depends="-pre-init,-init-private,-init-userdir,-init-user,-init-project,-do-init" name="-init-check">
+    <target depends="-pre-init,-init-private,-init-libraries,-init-userdir,-init-user,-init-project,-do-init" name="-init-check">
         <fail unless="src.dir">Must set src.dir</fail>
         <fail unless="test.src.dir">Must set test.src.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
@@ -794,9 +819,10 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
     <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
-        <copyfiles files="${file.reference.jpa-api-2.0-cr-1.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.hibernate-core.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${libs.PostgreSQLDriver.classpath}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.hibernate-core.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.jpa-api-2.0-cr-1.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.postgresql-9.3-1104.jdbc41.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${file.reference.activation.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${file.reference.jaxb-api.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${file.reference.jbossws-native-jaxrpc.jar}" todir="${build.classes.dir}"/>
@@ -810,9 +836,10 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${file.reference.xercesImpl.jar}" todir="${build.classes.dir}"/>
     </target>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
-        <basename file="${file.reference.jpa-api-2.0-cr-1.jar}" property="manifest.file.reference.jpa-api-2.0-cr-1.jar"/>
-        <basename file="${file.reference.hibernate-core.jar}" property="manifest.file.reference.hibernate-core.jar"/>
         <basename file="${libs.PostgreSQLDriver.classpath}" property="manifest.libs.PostgreSQLDriver.classpath"/>
+        <basename file="${file.reference.hibernate-core.jar}" property="manifest.file.reference.hibernate-core.jar"/>
+        <basename file="${file.reference.jpa-api-2.0-cr-1.jar}" property="manifest.file.reference.jpa-api-2.0-cr-1.jar"/>
+        <basename file="${file.reference.postgresql-9.3-1104.jdbc41.jar}" property="manifest.file.reference.postgresql-9.3-1104.jdbc41.jar"/>
         <basename file="${file.reference.activation.jar}" property="manifest.file.reference.activation.jar"/>
         <basename file="${file.reference.jaxb-api.jar}" property="manifest.file.reference.jaxb-api.jar"/>
         <basename file="${file.reference.jbossws-native-jaxrpc.jar}" property="manifest.file.reference.jbossws-native-jaxrpc.jar"/>
@@ -825,27 +852,29 @@ exists or setup the property manually. For example like this:
         <basename file="${file.reference.xalan.jar}" property="manifest.file.reference.xalan.jar"/>
         <basename file="${file.reference.xercesImpl.jar}" property="manifest.file.reference.xercesImpl.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 jar-7 jar-8 jar-9 jar-10 jar-11 jar-12 jar-13 jar-14 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.jpa-api-2.0-cr-1.jar}"/>
+            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 jar-7 jar-8 jar-9 jar-10 jar-11 jar-12 jar-13 jar-14 jar-15 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.libs.PostgreSQLDriver.classpath}"/>
             <attribute name="jar-2-Extension-Name" value="${manifest.file.reference.hibernate-core.jar}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.libs.PostgreSQLDriver.classpath}"/>
-            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.activation.jar}"/>
-            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.jaxb-api.jar}"/>
-            <attribute name="jar-6-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxrpc.jar}"/>
-            <attribute name="jar-7-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxws-ext.jar}"/>
-            <attribute name="jar-8-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxws.jar}"/>
-            <attribute name="jar-9-Extension-Name" value="${manifest.file.reference.jbossws-native-saaj.jar}"/>
-            <attribute name="jar-10-Extension-Name" value="${manifest.file.reference.resolver.jar}"/>
-            <attribute name="jar-11-Extension-Name" value="${manifest.file.reference.serializer.jar}"/>
-            <attribute name="jar-12-Extension-Name" value="${manifest.file.reference.stax-api.jar}"/>
-            <attribute name="jar-13-Extension-Name" value="${manifest.file.reference.xalan.jar}"/>
-            <attribute name="jar-14-Extension-Name" value="${manifest.file.reference.xercesImpl.jar}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.file.reference.jpa-api-2.0-cr-1.jar}"/>
+            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.postgresql-9.3-1104.jdbc41.jar}"/>
+            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.activation.jar}"/>
+            <attribute name="jar-6-Extension-Name" value="${manifest.file.reference.jaxb-api.jar}"/>
+            <attribute name="jar-7-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxrpc.jar}"/>
+            <attribute name="jar-8-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxws-ext.jar}"/>
+            <attribute name="jar-9-Extension-Name" value="${manifest.file.reference.jbossws-native-jaxws.jar}"/>
+            <attribute name="jar-10-Extension-Name" value="${manifest.file.reference.jbossws-native-saaj.jar}"/>
+            <attribute name="jar-11-Extension-Name" value="${manifest.file.reference.resolver.jar}"/>
+            <attribute name="jar-12-Extension-Name" value="${manifest.file.reference.serializer.jar}"/>
+            <attribute name="jar-13-Extension-Name" value="${manifest.file.reference.stax-api.jar}"/>
+            <attribute name="jar-14-Extension-Name" value="${manifest.file.reference.xalan.jar}"/>
+            <attribute name="jar-15-Extension-Name" value="${manifest.file.reference.xercesImpl.jar}"/>
         </manifest>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
-        <copyfiles files="${file.reference.jpa-api-2.0-cr-1.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.hibernate-core.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.PostgreSQLDriver.classpath}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.hibernate-core.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.jpa-api-2.0-cr-1.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.postgresql-9.3-1104.jdbc41.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.activation.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.jaxb-api.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.jbossws-native-jaxrpc.jar}" todir="${dist.ear.dir}/lib"/>
