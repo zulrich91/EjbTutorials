@@ -20,7 +20,7 @@ import javax.naming.NamingException;
  *
  * @author ulrich
  */
-public class EjbModuleTester {
+public class StatelessTester {
 
     /**
      * @param args the command line arguments
@@ -50,7 +50,7 @@ public class EjbModuleTester {
     }
 
     public static void main(String[] args) {
-        EjbModuleTester ejbTester = new EjbModuleTester();
+        StatelessTester ejbTester = new StatelessTester();
         ejbTester.testStatelessEjb();
     }
 

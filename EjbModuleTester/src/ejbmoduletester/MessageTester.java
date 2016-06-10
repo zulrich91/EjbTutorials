@@ -29,7 +29,7 @@ import javax.naming.NamingException;
  *
  * @author ulrich
  */
-public class EjbMessageTester {
+public class MessageTester {
 
     /**
      * @param args the command line arguments
@@ -52,14 +52,14 @@ public class EjbMessageTester {
         try {
             ctx = new InitialContext(props);
         } catch (NamingException ex) {
-            Logger.getLogger(EjbMessageTester.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessageTester.class.getName()).log(Level.SEVERE, null, ex);
         }
         brConsoleReader
                 = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public static void main(String[] args) {
-        EjbMessageTester ejbTester = new EjbMessageTester();
+        MessageTester ejbTester = new MessageTester();
         ejbTester.testMessageBeanEjb();
     }
 
@@ -115,7 +115,7 @@ public class EjbMessageTester {
                 try {
                     brConsoleReader.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(EjbMessageTester.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MessageTester.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

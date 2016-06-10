@@ -19,7 +19,7 @@ import javax.naming.NamingException;
  *
  * @author ulrich
  */
-public class EjbModuleStatefulTester {
+public class StatefulTester {
 
     BufferedReader brConsoleReader = null;
     Properties props;
@@ -40,7 +40,7 @@ public class EjbModuleStatefulTester {
     }
 
     public static void main(String[] args) {
-        EjbModuleStatefulTester ejbTester = new EjbModuleStatefulTester();
+        StatefulTester ejbTester = new StatefulTester();
         ejbTester.testStatefulEjb();
     }
 
