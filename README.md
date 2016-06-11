@@ -1,5 +1,5 @@
 # EjbTutorials
-This repo contains a running code of what is found in Ejb Tutorials from tutorials point
+This repo contains a running code of what is found in Ejb Tutorials from tutorials point http://www.tutorialspoint.com//ejb/index.htm
 
 #Requirements
 
